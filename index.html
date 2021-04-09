@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" />
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-storage.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div id="ll" class="auth">
+        <div id="logda" class="logindata">
+            <div class="contain">
+                <p> LOGIN</p>
+                <input id="lm" type="text" placeholder="name" required><br>
+                <input id="lp" type="text" placeholder="pass" required><br>
+                <button onclick="login();">Log In</button><br><br>
+                <center><a onclick="open_signup();"> Don't have an account? Sign up</a></center>
+            </div>
+        </div>
+        <div id="sigin" class="signin">
+            <div class="container">
+                <p>SIGN UP</p>
+                <input id="sn" type="text" placeholder="name" required>
+                <input id="sm" type="text" placeholder="mail" required>
+                <input id="sp" type="text" placeholder="pass" required>
+            <button onclick="signin();">Sign Up</button><br><br>
+            <center><a onclick="signup_close();"> Already have an account? Log In</a></center>
+            </div>
+        </div>
+</div>
+    <div id="hhh" class="wholemediacode">
+        <div class="header">
+            <div class="logoname">
+                <span>wizzocial</span>
+            </div>
+            <div class="widgets">
+                <button onclick="open_img_post();"><i class="fa fa-home" aria-hidden="true"></i></button>
+                <button onclick="close_img_post();"><i class="fa fa-television" aria-hidden="true"></i></button>
+                <button><i class="fa fa-music" aria-hidden="true"></i></button>
+            </div>
+        </div>
+        <div id="sss" class="createuserpost">
+            <div class="create_post_btn">
+                <button onclick="document.getElementById('background_post').style.display='block';"><i class="fa fa-plus" aria-hidden="true"></i></button>
+            </div>
+            <div class="containerr">
+                <ul id="postss">
+                </ul>
+            </div>
+            
+            <div id="background_post" class="background_of_cp">
+                <div class="items">
+                    <div class="items_content">
+                        <button id="close" onclick="document.getElementById('background_post').style.display='none';">&times</button>
+                        <p>Create Post</p>
+                        <textarea id="post_text" placeholder="Enter any thought of yours ..." required></textarea>
+                        <button id="postthepost" type="submit">Create Post</button>
+                        <input type="file" id="imgfiles" required>
+                    </div>
+                </div>
+            </div>
+    </div>
+        <!-- thi is the code for the videos post. -->
+        
+    <div id="ssss" class="createuservideopost">
+        <div class="containerrr">
+            <ul id="postsss">
+            </ul>
+        </div>
+            <div id="background_post_video" class="background_of_cpv">
+                <div class="itemss">
+                    <div class="items_contentt">
+                        <button id="closee" onclick="document.getElementById('background_post_video').style.display='none';">&times</button>
+                        <p>Create Video Post</p>
+                        <textarea id="post_textt" placeholder="Enter any thought of yours ..." required></textarea>
+                        <button id="postthepostt" type="submit">Create Post</button>
+                        <input type="file" id="imgfiless" required>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="create_post_btnn">
+                <button onclick="document.getElementById('background_post_video').style.display='block';"><i class="fa fa-plus" aria-hidden="true"></i></button>
+            </div>
+    </div>
+</div>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyBMtlBdZUT3oHZjlpaq7Ny-C2oBsR_HWfk",
+            authDomain: "sociowizz.firebaseapp.com",
+            databaseURL: "https://sociowizz-default-rtdb.firebaseio.com",
+            projectId: "sociowizz",
+            storageBucket: "sociowizz.appspot.com",
+            messagingSenderId: "626612799215",
+            appId: "1:626612799215:web:8f80bbfbc04d8d90737d1a"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        //-----------------------------------------------------------------------------------------
+ 
+
+         function signin(){
+             var sn = document.getElementById("sn").value;
+             var sm = document.getElementById("sm").value;
+             var sp = document.getElementById("sp").value;
+
+             var ref = firebase.database().ref("users/" );
+         
+             ref.once("value")
+            .then(function(snapshot) {
+
+                if(snapshot.child(sn).exists()){
+                    alert("user exists");
+                }else{
+                    firebase.database().ref("users/" + sn).set({
+                        "password" : sp,
+                        "email" : sm,
+                        "name" : sn
+                    });
+                    alert("user created..You can now login in");
+                }
+            });
+            }
+            function login(){
+                var lm = document.getElementById("lm").value;
+                var lp = document.getElementById("lp").value;
+
+                var ref = firebase.database().ref("users/" );
+                ref.once("value")
+                .then(function(snapshot) {
+
+                    if(snapshot.child(lm).exists()){
+                        firebase.database().ref("users/" + lm).on("value", function(snapshot){
+                            if(snapshot.val().password === lp){
+                                jj();
+                            }
+                            else{
+                                alert("Password or username incorrect...");
+                            }
+                        })
+                    }else{
+                        alert("user doesn't exist...");
+                    }
+                });
+            }
+                                function kk(){
+                                    document.getElementById('ll').style.display = "none";
+                                }
+                                function lll(){
+                                    document.getElementById('hhh').style.display = "block";
+                                }
+                                 function jj(){
+                                     kk();
+                                     lll();
+                                 }
+            //login form and all ---------------- please corporate-----------------------------with us...
+            function close_signup(){
+                document.getElementById('sigin').style.display = "none";
+            }
+            function open_login(){
+                document.getElementById('logda').style.display = "block";
+            }
+            function signup_close(){
+                close_signup();
+                open_login();
+            }
+
+            function open_signup(){
+                document.getElementById('sigin').style.display = "block";
+            }
+            function close_login(){
+                document.getElementById('logda').style.display = "none";
+            }
+            function signup_open(){
+                open_signup();
+                close_login();
+            }
+        //posting image to ----------------------- wizzocial -------------------- website
+        document.getElementById('postthepost').onclick = function(){
+            var img = document.getElementById('imgfiles').files[0];
+            var imgUrl;
+            var message = document.getElementById('post_text').value;
+            var storage = firebase.storage().ref('images/' + img.name);
+            const task = storage.put(img);
+            var imgUrl = task.on('state_chaged', 
+              function(snap){
+                  console.log(snap.bytesTransferred / snap.totalBytes * 100);
+              },
+              function error(err){
+                  console.log(err.message);
+              },
+              function completed(){
+               
+                  storage.getDownloadURL().then( url => {
+                    imgUrl = url;
+                       firebase.database().ref("posts/").push().set({
+                          "sendername" : 'harry',
+                          "img" : imgUrl,
+                          "message" : message
+                       });
+                  });
+              }
+            )
+           
+        }
+        firebase.database().ref("posts" + "/" ).on("child_added", function(snapshot){
+                    
+                    var html = "";
+                    html+= "<li>";
+                        html +=  "<br>"+"<b>"+snapshot.val().sendername +"</b>"+ "<br>" + "<br>"+ "<img  src='" + snapshot.val().img + "' >" + "<br>" +"<br>"  +snapshot.val().message +"</b>"+ "<br>" +"<br>"+"<br>";
+                    html+= "</li>";
+
+                    document.getElementById('postss').innerHTML += html ;
+                });
+
+ // ------------------------------------ general settings for app ---------------------------------
+
+      function close(){
+          document.getElementById('sss').style.display = "none";
+      }
+      function open(){
+        document.getElementById('ssss').style.display = "block";
+      }
+      function close_img_post(){
+          close();
+          open();
+      }
+
+      function closee(){
+          document.getElementById('sss').style.display = "block";
+      }
+      function openn(){
+        document.getElementById('ssss').style.display = "none";
+      }
+      function open_img_post(){
+          closee();
+          openn();
+      }
+
+      //video post-------------------------- settings -----------------------------
+
+      document.getElementById('postthepostt').onclick = function(){
+            var imgg = document.getElementById('imgfiless').files[0];
+            var imgUrll;
+            var messagee = document.getElementById('post_textt').value;
+            var storagee = firebase.storage().ref('video/' + imgg.name);
+            const taskk = storagee.put(imgg);
+            var imgUrll = taskk.on('state_chaged', 
+              function(snap){
+                  console.log(snap.bytesTransferred / snap.totalBytes * 100);
+              },
+              function error(err){
+                  console.log(err.message);
+              },
+              function completed(){
+               
+                  storagee.getDownloadURL().then( url => {
+                    imgUrll = url;
+                       firebase.database().ref("posts/" + "video/").push().set({
+                          "sendername" : 'harry',
+                          "img" : imgUrll,
+                          "message" : messagee
+                       });
+                  });
+              }
+            )
+           
+        }
+        firebase.database().ref("posts" + "/" + "video/").on("child_added", function(snapshot){
+                    
+                    var html = "";
+                    html+= "<li>";
+                        html +=  "<br>"+"<b>"+snapshot.val().sendername +"</b>"+ "<br>" + "<br>"+ "<video controls src='" + snapshot.val().img + "' >" + "</video>" + "<br>" +"<br>"  +snapshot.val().message +"</b>"+ "<br>" +"<br>"+"<br>";
+                    html+= "</li>";
+
+                    document.getElementById('postsss').innerHTML += html ;
+                });
+    </script>
+    
+</body>
+</html>
